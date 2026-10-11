@@ -1,9 +1,14 @@
 CREATE DATABASE IF NOT EXISTS RestaurantDatabase;
 USE RestaurantDatabase;
 
+--reset to be able rerun this scrip
+
 DROP TABLE IF EXISTS Booking;
 DROP TABLE IF EXISTS Customer;
 DROP TABLE IF EXISTS RestaurantTable;
+
+--table creations
+--engine def. cause of error
 
 CREATE TABLE Customer (
     CustomerID INT AUTO_INCREMENT PRIMARY KEY,
@@ -33,3 +38,29 @@ CREATE TABLE Booking (
     FOREIGN KEY (TableID)
         REFERENCES RestaurantTable(TableID)
 ) ENGINE=InnoDB;
+
+--inserts
+
+INSERT INTO Customer
+    (CustomerID, FirstName, LastName, Email, Phone)
+VALUES
+    (1, 'Emma', 'Jensen',
+     'emma.jensen@example.com', '+45 20123456'),
+    (2, 'Oliver', 'Nielsen',
+     'oliver.nielsen@example.com', '+45 22123456'),
+    (3, 'Sofia', 'Andersen',
+     'sofia.andersen@example.com', '+45 30123456'),
+    (4, 'William', 'Larsen',
+     'william.larsen@example.com', '+45 40123456'),
+    (5, 'Freja', 'Hansen',
+     'freja.hansen@example.com', '+45 50123456');
+
+INSERT INTO RestaurantTable
+    (TableID, TableNumber, Capacity, Location)
+VALUES
+    (1, 1, 2, 'Window'),
+    (2, 2, 4, 'Window'),
+    (3, 3, 4, 'Main dining area'),
+    (4, 4, 6, 'Main dining area'),
+    (5, 5, 8, 'Private dining area'),
+    (6, 6, 2, 'Terrace');
