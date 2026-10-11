@@ -1,22 +1,56 @@
 <?php
-/*
-* Change the value of $password if you have set a password on the root userid
-* Change NULL to port number to use DBMS other than the default using port 3306
-*
-*/
-$user = 'root';
-$password = ''; //To be completed if you have set a password to root
-$database = ''; //To be completed to connect to a database. The database must exist.
-$port = NULL; //Default must be NULL to use default port
-$mysqli = new mysqli('127.0.0.1', $user, $password, $database, $port);
+// Database connection settings
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "RestaurantDatabase";
 
-if ($mysqli->connect_error) {
-    die('Connect Error (' . $mysqli->connect_errno . ') '
-            . $mysqli->connect_error);
+// Connect to MySQL
+$conn = new mysqli($host, $user, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
-echo '<p>Connection OK '. $mysqli->host_info.'</p>';
-echo '<p>Server '.$mysqli->server_info.'</p>';
-echo '<p>Initial charset: '.$mysqli->character_set_name().'</p>';
 
-$mysqli->close();
+$conn->set_charset("utf8mb4");
+
+echo "<h1>Restaurant Database</h1>";
+echo "<p>Database connection successful!</p>";
+
+$sql = "SELECT TableID, TableNumber, Capacity, Location
+        FROM RestaurantTable
+        ORDER BY TableNumber";
+
+$result = $conn->query($sql);
+
+echo "<h2>Restaurant Tables</h2>";
+
+if ($result && $result->num_rows > 0) {
+    echo "<table border='1' cellpadding='8'>";
+    echo "<tr>
+            <th>Table ID</th>
+            <th>Table Number</th>
+            <th>Capacity</th>
+            <th>Location</th>
+          </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($row["TableID"]) . "</td>";
+        echo "<td>" . htmlspecialchars($row["TableNumber"]) . "</td>";
+        echo "<td>" . htmlspecialchars($row["Capacity"]) . "</td>";
+        echo "<td>" . htmlspecialchars($row["Location"]) . "</td>";
+        echo "</tr>";
+    }
+
+    echo "</table>";
+} elseif ($result) {
+    echo "<p>No restaurant tables found.</p>";
+} else {
+    echo "<p>Query failed: "
+        . htmlspecialchars($conn->error) . "</p>";
+}
+
+$conn->close();
 ?>
